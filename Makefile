@@ -9,8 +9,9 @@ SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 HEADERS := $(shell find $(SRCDIR) -type f -name *.$(HEADEREXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 CFLAGS := -g -Wall
-LINK := -lpthread
-INC := -I /usr/local/include -L /usr/local/lib \
+LINK := -lyaml-cpp -Wl, -B/lib/x86-64_linux_gnu/libpthread.so.0 -lpthread 
+#INC := -L/home/chhan/eclipse-workspace/AC_Controller/lib 
+INC :=	-I /usr/local/include -L/usr/local/lib \
 	-I $(SRCDIR)/network \
 	-I $(SRCDIR)/network/accesscontrol \
 	-I $(SRCDIR)/network/policymanager \
@@ -31,19 +32,3 @@ clean:
 
 .PHONY: clean
 
-
-
-
-
-#ifeq ($(BUILD_MODE),debug)
-#	CFLAGS += -g
-#else ifeq ($(BUILD_MODE),run)
-#	CFLAGS += -O2
-#else ifeq ($(BUILD_MODE),linuxtools)
-#	CFLAGS += -g -pg -fprofile-arcs -ftest-coverage
-#	LDFLAGS += -pg -fprofile-arcs -ftest-coverage
-#	EXTRA_CLEAN += AC_Controller.gcda AC_Controller.gcno $(PROJECT_ROOT)gmon.out
-#	EXTRA_CMDS = rm -rf AC_Controller.gcda
-#else
-#    $(error Build mode $(BUILD_MODE) not supported by this Makefile)
-#endif
