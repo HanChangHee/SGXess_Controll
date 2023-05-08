@@ -1,27 +1,26 @@
-FROM alpine:3.17.0 AS build
+######### BUILD #########
+FROM ubuntu AS build
 
-RUN apk update && \
-    apk add --no-cache \
-    build-base \
-    libstdc++ \
-    make && 
+RUN apt update && \
+    apt install -y make \
+    g++
 
-WORKDIR /home/chhan/eclipse-workspace/AC_Controller
+WORKDIR /hello
 
 COPY src/ ./src/
+COPY lib/ /usr/lib/
+COPY include/ /usr/include
 COPY Makefile .
 
 RUN make
 
-WORKDIR /home/chhan/eclipse-workspace/AC_Controller
+######### RUN #########
 
-RUN addgroup -S chhan && adduser -S chhan -G chhan
-USER chhan
+FROM ubuntu
 
-COPY . .
+#COPY --chown=chhan:chhan --from=build ./hello/Controller ./app/
+COPY --from=build ./hello/Controller ./app/
 
-CMD ls -al
-#COPY --chown=chhan:chhan ./Controller .
+ENTRYPOINT [ "./app/Controller" ]
 
-#ENTRYPOINT ["Controller"]
 

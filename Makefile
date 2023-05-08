@@ -9,8 +9,7 @@ SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 HEADERS := $(shell find $(SRCDIR) -type f -name *.$(HEADEREXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 CFLAGS := -g -Wall
-LINK := -lyaml-cpp -Wl, -B/lib/x86-64_linux_gnu/libpthread.so.0 -lpthread 
-#INC := -L/home/chhan/eclipse-workspace/AC_Controller/lib 
+LINK := -lpthread -lyaml-cpp
 INC :=	-I /usr/local/include -L/usr/local/lib \
 	-I $(SRCDIR)/network \
 	-I $(SRCDIR)/network/accesscontrol \
