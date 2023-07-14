@@ -15,7 +15,7 @@ public:
 
 	bool init(unsigned short port);
 	int getClientConn();
-	void deleteClientConn(int clientSock);
+	void deleteConn();
 
 private:
 	int m_sock;

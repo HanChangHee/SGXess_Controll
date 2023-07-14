@@ -1,0 +1,40 @@
+# Hello World manifest file example
+
+loader.entrypoint = "file:{{ gramine.libos }}"
+libos.entrypoint = "/controller"
+loader.log_level = "{{ log_level }}"
+
+#loader.env.LD_LIBRARY_PATH = "/lib:{{ arch_libdir }}:{{ install_dir }}/lib"
+loader.env.LD_LIBRARY_PATH = "/lib:/lib_y:{{ arch_libdir }}"
+loader.env.PATH = "/:/bin:/usr/bin"
+loader.env.RATLS_CRT_PATH = "/tmp/tlscert.der"
+loader.env.RATLS_KEY_PATH = "/tmp/tlskey.der"
+
+fs.mounts = [
+  { path = "/lib_y", uri = "file:{{ install_dir }}/lib/" },
+  { path = "/lib", uri = "file:{{ gramine.runtimedir() }}" },
+  { path = "{{ arch_libdir }}/libstdc++.so.6", uri = "file:{{ arch_libdir }}/libstdc++.so.6" },
+  { path = "{{ arch_libdir }}/libstdc++.so.6.0.28", uri = "file:{{ arch_libdir }}/libstdc++.so.6.0.28" },
+  { path = "{{ arch_libdir }}/libgcc_s.so.1", uri = "file:{{ arch_libdir }}/libgcc_s.so.1" },
+  { path = "{{ arch_libdir }}/libcjson.so.1", uri = "file:{{ arch_libdir }}/libcjson.so.1.7.10" },
+  { path = "/controller", uri = "file:{{ install_dir }}/controller" },
+  { type = "tmpfs", path = "/tmp" },
+]
+
+sgx.debug = true
+sgx.edmm_enable = {{ 'true' if env.get('EDMM', '0') == '1' else 'false' }}
+sgx.remote_attestation = "{{ ra_type }}"
+sgx.ra_client_spid = "12345678901234567890123456789012"
+sgx.ra_client_linkable = false
+
+#sgx.allowed_file = [
+#  "file:controller"
+#]
+
+sgx.trusted_files = [
+  "file:{{ gramine.libos }}",
+  "file:{{ arch_libdir }}/",
+  "file:{{ install_dir }}/controller",
+  "file:{{ gramine.runtimedir() }}/",
+  "file:{{ install_dir }}/lib/"
+]

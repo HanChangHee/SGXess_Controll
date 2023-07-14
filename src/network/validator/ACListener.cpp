@@ -43,7 +43,7 @@ bool ACListener::runListener() {
 		// todo: receive and validate data from clients
 		ACValidator::validate(clientSock);
 
-		m_listener.deleteClientConn(clientSock);
+		//m_listener.deleteClientConn(clientSock);
 	}
 
 	return false;

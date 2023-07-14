@@ -5,6 +5,7 @@
  *      Author: chhan
  */
 #include <stdio.h>
+#include "PolicyManager.h"
 #include "PolicyListener.h"
 
 PolicyListener::PolicyListener() {
@@ -37,7 +38,9 @@ bool PolicyListener::runListener() {
 			printf("PolicyListener listener get client failed\n");
 			break;
 		}
-		m_listener.deleteClientConn(clientSock);
+		PolicyManager::manage(clientSock);
+
+		//m_listener.deleteClientConn(clientSock);
 	}
 
 	return false;

@@ -23,6 +23,7 @@ bool PolicyManager::manage(int clientSock) {
 		return false;
 	}
 
+	printf("received data: %s\n", data.c_str());
 	// todo: parse data
 	// todo: manage request
 
