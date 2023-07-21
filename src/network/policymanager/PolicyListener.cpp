@@ -33,12 +33,12 @@ void *PolicyListener::run(void *argv) {
 
 bool PolicyListener::runListener() {
 	while(true) {
-		int clientSock = m_listener.getClientConn();
-		if ( -1 == clientSock ) {
-			printf("PolicyListener listener get client failed\n");
+		std::string msg;
+		if ( false == m_listener.getClientMsgRATLS(msg) ) {
 			break;
 		}
-		PolicyManager::manage(clientSock);
+
+		printf("received message from client: %s\n", msg.c_str());
 
 		//m_listener.deleteClientConn(clientSock);
 	}

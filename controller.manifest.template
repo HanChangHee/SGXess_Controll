@@ -7,8 +7,6 @@ loader.log_level = "{{ log_level }}"
 #loader.env.LD_LIBRARY_PATH = "/lib:{{ arch_libdir }}:{{ install_dir }}/lib"
 loader.env.LD_LIBRARY_PATH = "/lib:/lib_y:{{ arch_libdir }}"
 loader.env.PATH = "/:/bin:/usr/bin"
-loader.env.RATLS_CRT_PATH = "/tmp/tlscert.der"
-loader.env.RATLS_KEY_PATH = "/tmp/tlskey.der"
 
 fs.mounts = [
   { path = "/lib_y", uri = "file:{{ install_dir }}/lib/" },

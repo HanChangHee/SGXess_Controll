@@ -22,6 +22,46 @@ Listener::~Listener() {
 }
 
 bool Listener::init(unsigned short port) {
+	if ( false == m_attestator.initRATLS() ) {
+		return false;
+	}
+
+	if ( false == listenRATLS(port) ) {
+		return false;
+	}
+
+	return true;
+}
+
+bool Listener::listenRATLS(unsigned short port) {
+	return m_attestator.setupRATLS(port);
+}
+
+int Listener::getClientMsgRATLS(std::string &msg) {
+	return m_attestator.getClientMsg(msg);
+}
+
+int Listener::getClientConn() {
+	sockaddr_in client_addr;
+	int clientAddrSize = sizeof(client_addr);
+	int clientSock = accept(m_sock, (struct sockaddr *)&client_addr, (socklen_t *)&clientAddrSize);
+
+	if ( 0 > clientSock ) {
+		return -1;
+	}
+
+	return clientSock;
+}
+
+void Listener::deleteConn() {
+	if ( 0 != m_sock ) {
+		close(m_sock);
+		m_sock = 0;
+	}
+}
+
+
+bool Listener::listenTCP(unsigned short port) {
 	if ( 0 != m_sock ) {
 		deleteConn();
 	}
@@ -33,7 +73,6 @@ bool Listener::init(unsigned short port) {
 	}
 
 	int ret = 1;
-	//setsockopt(m_sock, SOL_SOCKET, SO_REUSEADDR, (const char *)&ret, sizeof(ret));
 	if ( 0 > ret ) {
 		printf("Failed to set socket option\n");
 		return false;
@@ -57,23 +96,4 @@ bool Listener::init(unsigned short port) {
 	}
 
 	return true;
-}
-
-int Listener::getClientConn() {
-	sockaddr_in client_addr;
-	int clientAddrSize = sizeof(client_addr);
-	int clientSock = accept(m_sock, (struct sockaddr *)&client_addr, (socklen_t *)&clientAddrSize);
-
-	if ( 0 > clientSock ) {
-		return -1;
-	}
-
-	return clientSock;
-}
-
-void Listener::deleteConn() {
-	if ( 0 != m_sock ) {
-		close(m_sock);
-		m_sock = 0;
-	}
 }
