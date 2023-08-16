@@ -17,13 +17,6 @@
 
 #include "Attestator.h"
 
-
-/* RA-TLS: on client, only need to register ra_tls_verify_callback_der() for cert verification */
-int (*ra_tls_verify_callback_der_f)(uint8_t* der_crt, size_t der_crt_size);
-
-/* RA-TLS: if specified in command-line options, use our own callback to verify SGX measurements */
-void (*ra_tls_set_measurement_callback_f)(int (*f_cb)(const char* mrenclave, const char* mrsigner, const char* isv_prod_id, const char* isv_svn));
-
 /* RA-TLS: on server, only need ra_tls_create_key_and_crt_der() to create keypair and X.509 cert */
 int (*ra_tls_create_key_and_crt_der_f)(u_int8_t** der_key, size_t* der_key_size, u_int8_t** der_crt, size_t* der_crt_size);
 

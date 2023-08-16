@@ -1,31 +1,37 @@
 /*
  * PolicyListener.cpp
  *
- *  Created on: 2023. 3. 29.
+ *  Created on: 2023. 4. 14.
  *      Author: chhan
  */
+
 #include <stdio.h>
-#include "PolicyManager.h"
+
+#include "PolicyDeployer.h"
 #include "PolicyListener.h"
 
 PolicyListener::PolicyListener() {
+	// TODO Auto-generated constructor stub
+
 }
 
 PolicyListener::~PolicyListener() {
+	// TODO Auto-generated destructor stub
 }
 
+
 bool PolicyListener::init() {
-	return m_listener.init(30001);
+	return m_listener.init(30000);
 }
 
 void *PolicyListener::run(void *argv) {
 	PolicyListener listener;
 	if ( false == listener.init() ) {
-		printf("PolicyListener listener init failed\n");
+		printf("ACListener listener init failed\n");
 		return 0;
 	}
 
-	printf("PolicyListener listener done\n");
+	printf("ACListener listener done\n");
 	listener.runListener();
 
 	return 0;
@@ -33,14 +39,13 @@ void *PolicyListener::run(void *argv) {
 
 bool PolicyListener::runListener() {
 	while(true) {
-		std::string msg;
-		if ( false == m_listener.getClientMsgRATLS(msg) ) {
+		int clientSock = m_listener.getClientConn();
+		if ( -1 == clientSock ) {
+			printf("ACListener listener get client failed\n");
 			break;
 		}
 
-		printf("received message from client: %s\n", msg.c_str());
-
-		//m_listener.deleteClientConn(clientSock);
+		m_listener.deleteClientConn(clientSock);
 	}
 
 	return false;
