@@ -178,7 +178,6 @@ bool Attestator::loadAttestLibrary(std::string &attestType, void* &ra_tls_attest
 	    ra_tls_create_key_and_crt_der_f = dlsym(ra_tls_attest_lib, "ra_tls_create_key_and_crt_der");
 	    if ( NULL != (error = dlerror()) ) {
 	    	mbedtls_printf("%s\n", error);
-	       return false;
 	    }
 	}
 	else {

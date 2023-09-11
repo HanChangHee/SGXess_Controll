@@ -19,7 +19,7 @@ public:
 	int getClientMsgRATLS(std::string &msg);
 	int getClientConn();
 	void deleteConn();
-
+	void deleteClientConn(int clientSock);
 private:
 	bool listenTCP(unsigned short port);
 	bool listenRATLS(unsigned short port);

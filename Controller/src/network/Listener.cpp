@@ -60,6 +60,9 @@ void Listener::deleteConn() {
 	}
 }
 
+void Listener::deleteClientConn(int clientSock) {
+	close(clientSock);
+}
 
 bool Listener::listenTCP(unsigned short port) {
 	if ( 0 != m_sock ) {

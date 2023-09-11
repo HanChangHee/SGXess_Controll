@@ -12,7 +12,8 @@
 #ifndef POLICYLISTENER_H_
 #define POLICYLISTENER_H_
 
-#include "Listener.h"
+//#include "Listener.h"
+#include "TLSServer.h"
 
 class PolicyListener {
 public:
@@ -26,10 +27,11 @@ public:
 
 private:
 	// listen for connection from deployer
-	bool runListener();
+	bool runListener(PolicyManager *manager);
 
 private:
-	Listener m_listener;
+	//Listener m_listener;
+	TLSServer m_server;
 };
 
 #endif /* POLICYLISTENER_H_ */

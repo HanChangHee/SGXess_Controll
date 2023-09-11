@@ -14,10 +14,10 @@ Thread::Thread() {
 Thread::~Thread() {
 }
 
-bool Thread::runThread(void *(*run) (void *)) {
+bool Thread::runThread(void *(*run) (void *), void *argv) {
 	pthread_t pThread;
 
-	::pthread_create(&pThread, NULL, run, NULL);
+	::pthread_create(&pThread, NULL, run, argv);
 	::pthread_detach(pThread);
 
 	return true;

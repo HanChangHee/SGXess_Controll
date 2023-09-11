@@ -20,7 +20,8 @@ public:
 	static void *run(void *argv);
 
 private:
-	bool runListener();
+
+	bool runListener(PolicyManager *manager);
 
 private:
 	Listener m_listener;

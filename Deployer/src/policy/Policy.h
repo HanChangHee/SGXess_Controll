@@ -27,7 +27,7 @@ public:
 	Policy();
 
 	// init object with inserted values
-	Policy(std::string &sPolicy);
+	Policy(std::string &policy);
 
 	virtual ~Policy();
 

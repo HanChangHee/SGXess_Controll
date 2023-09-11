@@ -1,18 +1,23 @@
 #include <unistd.h>
 
 #include "Thread.h"
-//#include "ACListener.h"
 
+#include "PolicyManager.h"
 #include "PolicyListener.h"
-
-#include "Policy.h"
+#include "RequestListener.h"
 
 int main(int argc, char **argv) {
+	// init policy manager > all thread share manager object pointer
+	PolicyManager manager;
 
-	// 2. init AuthPolicy as static
-	// 3. run listeners by master listener, with no thread
+	// run policy listener
+	Thread::runThread(PolicyListener::run, &manager);
 
-	PolicyListener::run(NULL);
+	// run request listener
+	Thread::runThread(RequestListener::run, &manager);
+
+	// main process: check policy update
+	manager.managePolicy();
 
 	return 0;
 }

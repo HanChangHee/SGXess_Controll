@@ -23,6 +23,10 @@ Policy::Policy() {
 	m_action = UNKNOWN;
 }
 
+Policy::Policy(std::string &policy) {
+	setPolicy(policy);
+}
+
 Policy::~Policy() {
 }
 

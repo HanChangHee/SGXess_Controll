@@ -7,7 +7,7 @@ TARGET := controller
 CFLAGS := -Wall -fpermissive
 
 .PHONY: all
-        all: controller controller.manifest
+        all: controller controller.manifest 
 ifeq ($(SGX),1)
         all: controller.manifest.sgx controller.sig
 endif
@@ -33,8 +33,9 @@ INC :=	-I /usr/local/include \
 	-I /usr/include/gramine \
 	-I $(SGXSDK)/include \
 	-I $(SRCDIR)/network \
-	-I $(SRCDIR)/network/accesscontrol \
-	-I $(SRCDIR)/network/policymanager \
+	-I $(SRCDIR)/network/requestlistener \
+	-I $(SRCDIR)/network/policylistener \
+	-I $(SRCDIR)/network/tls \
 	-I $(SRCDIR)/policy \
 	-I $(SRCDIR)/utils \
 	-I $(SRCDIR)/attestation
@@ -60,6 +61,14 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 clean:
 	@echo "Cleaning..."
 	$(RM) -r $(BUILDDIR) $(TARGET) *.token *.sig *.manifest.sgx *.manifest
+
+############ GENERATE SSL CERTIFICATE #############
+ssl/server.crt: ssl/ca_config.conf
+	openssl genrsa -out ssl/ca.key 2048
+	openssl req -x509 -new -nodes -key ssl/ca.key -sha256 -days 1024 -out ssl/ca.crt -config ssl/ca_config.conf
+	openssl genrsa -out ssl/server.key 2048
+	openssl req -new -key ssl/server.key -out ssl/server.csr -config ssl/ca_config.conf
+	openssl x509 -req -days 360 -in ssl/server.csr -CA ssl/ca.crt -CAkey ssl/ca.key -CAcreateserial -out ssl/server.crt
 
 ############ SET GRAMINE CONFIGURATION #############
 RA_TYPE ?= epid

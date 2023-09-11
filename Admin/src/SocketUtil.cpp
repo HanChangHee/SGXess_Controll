@@ -17,20 +17,21 @@ SocketUtil::~SocketUtil() {
 }
 
 bool SocketUtil::recv(int targetSock, std::string &data) {
-	size_t dataLen = 0;
+	char buffer[MAX_BUF_LEN] = {0, };
 
-	int recvLen = ::recv(targetSock, &dataLen, sizeof(dataLen), 0);
-
-	while(dataLen > 0) {
-		char buffer[MAX_BUF_LEN] = {0, };
-		int recvDataLen = ::recv(targetSock, buffer, dataLen > MAX_BUF_LEN ? MAX_BUF_LEN:dataLen, 0);
-		if ( 0 > recvDataLen ) {
+	while(true) {
+		int recvLen = ::recv(targetSock, buffer, MAX_BUF_LEN, 0);
+		if ( 0 > recvLen ) {
 			printf("[SocketUtil] recv failed\n");
 			return false;
 		}
+
 		data.append(buffer);
 
-		dataLen -= recvDataLen;
+		// recv complete
+		if ( MAX_BUF_LEN > recvLen ) {
+			break;
+		}
 	}
 
 	return true;

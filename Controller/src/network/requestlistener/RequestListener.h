@@ -12,22 +12,23 @@
 #ifndef ACLISTENER_H_
 #define ACLISTENER_H_
 
-#include "Listener.h"
+//#include "Listener.h"
+#include "TLSServer.h"
 
-class ACListener {
+class RequestListener {
 public:
-	ACListener();
-	virtual ~ACListener();
+	RequestListener();
+	virtual ~RequestListener();
 
 	bool init();
 
 	static void *run(void *argv);
 
 private:
-	bool runListener();
+	bool runListener(PolicyManager *manager);
 
 private:
-	Listener m_listener;
+	TLSServer m_server;
 };
 
 #endif /* ACLISTENER_H_ */

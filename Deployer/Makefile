@@ -28,12 +28,15 @@ LIB :=  -L/USR/LOCAL/LIB \
 	-L$(SGXSDK)/sdk_libs \
 	-L$(SGX_LIBRARY_PATH)
 
-INC :=  -I /usr/local/include \
-	-I /usr/include/gramine \
-        -I $(SRCDIR)/network \
-        -I $(SRCDIR)/policy \
-        -I $(SRCDIR)/util \
-        -I $(SRCDIR)/attestation
+INC := -I /usr/local/include \
+		-I /usr/include/gramine \
+       -I $(SRCDIR)/network \
+		-I $(SRCDIR)/network/listener \
+		-I $(SRCDIR)/network/deployer \
+		-I $(SRCDIR)/network/tls \
+       -I $(SRCDIR)/policy \
+       -I $(SRCDIR)/util \
+       -I $(SRCDIR)/attestation
 
 ifeq ($(DEBUG),1)
 GRAMINE_LOG_LEVEL = debug

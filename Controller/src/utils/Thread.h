@@ -13,7 +13,7 @@ public:
 	Thread();
 	virtual ~Thread();
 
-	static bool runThread(void *(*run) (void *));
+	static bool runThread(void *(*run) (void *), void *argv = NULL);
 };
 
 #endif /* THREAD_H_ */
