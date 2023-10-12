@@ -58,11 +58,12 @@ clean:
 	@echo "Cleaning..."
 	$(RM) -r $(BUILDDIR) $(TARGET) *.token *.sig *.manifest.sgx *.manifest
 
-RA_TYPE ?= epid
+RA_TYPE ?= dcap
 ISVPRODID ?= 0
 
 deployer.manifest: deployer.manifest.template
 	gramine-manifest \
+		-Dentrypoint=$$(command -v gramine-ratls) \
 		-Dlog_level=$(GRAMINE_LOG_LEVEL) \
 		-Darch_libdir=$(ARCH_LIBDIR) \
 		-Dra_type=$(RA_TYPE) \

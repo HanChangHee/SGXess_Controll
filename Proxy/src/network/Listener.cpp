@@ -4,7 +4,7 @@
  *  Created on: 2023. 4. 10.
  *      Author: chhan
  */
-
+#include <stdio.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
@@ -23,12 +23,14 @@ Listener::~Listener() {
 bool Listener::init(unsigned short port) {
 	m_sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if ( 0 > m_sock ) {
+		printf("Failed to make socket\n");
 		return false;
 	}
 
 	int ret = 1;
 	setsockopt(m_sock, SOL_SOCKET, SO_REUSEADDR, (const char *)&ret, sizeof(ret));
 	if ( 0 > ret ) {
+		printf("Failed to set socket option\n");
 		return false;
 	}
 
@@ -39,13 +41,16 @@ bool Listener::init(unsigned short port) {
 
 	ret = bind(m_sock, (struct sockaddr *)&server_addr, sizeof(server_addr));
 	if ( 0 > ret ) {
+		printf("Failed to bind\n");
 		return false;
 	}
 
 	ret = listen(m_sock, 5);
 	if ( 0 > ret ) {
+		printf("Failed to listen\n");
 		return false;
 	}
+
 
 	return true;
 }

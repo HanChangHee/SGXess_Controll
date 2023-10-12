@@ -1,37 +1,50 @@
-# Hello World manifest file example
-
 loader.entrypoint = "file:{{ gramine.libos }}"
-libos.entrypoint = "/controller"
+loader.argv = [
+    "gramine-ratls", "/tmp/crt.pem", "/tmp/key.pem", "--", "/controller"
+]
+libos.entrypoint = "/gramine-ratls"
 loader.log_level = "{{ log_level }}"
 
+loader.uid = 65534
+loader.gid = 65534
+
 loader.env.LD_LIBRARY_PATH = "/lib:/lib_y:{{ arch_libdir }}"
-loader.env.PATH = "/:/bin:/usr/bin"
+loader.env.PATH = "/:/bin:/usr/bin:/usr/sbin"
 
 fs.mounts = [
+  { path = "/gramine-ratls", uri = "file:{{ entrypoint }}" },
+  { path = "/controller", uri = "file:{{ install_dir }}/controller" },
+
   { path = "/lib_y", uri = "file:{{ install_dir }}/lib/" },
   { path = "/lib", uri = "file:{{ gramine.runtimedir() }}" },
   { path = "{{ arch_libdir }}/libstdc++.so.6", uri = "file:{{ arch_libdir }}/libstdc++.so.6" },
   { path = "{{ arch_libdir }}/libstdc++.so.6.0.28", uri = "file:{{ arch_libdir }}/libstdc++.so.6.0.28" },
   { path = "{{ arch_libdir }}/libgcc_s.so.1", uri = "file:{{ arch_libdir }}/libgcc_s.so.1" },
   { path = "{{ arch_libdir }}/libcjson.so.1", uri = "file:{{ arch_libdir }}/libcjson.so.1.7.10" },
-  { path = "/controller", uri = "file:{{ install_dir }}/controller" },
-  { type = "tmpfs", path = "/tmp" },
+
+  { path = "/tmp", type = "tmpfs" },
 ]
+
+sgx.remote_attestation = "{{ ra_type }}"
+{%- if ra_type == "epid" %}
+sgx.ra_client_spid = "12345678901234567890123456789012"
+sgx.ra_client_linkable = false
+{%- endif %}
+
 
 sgx.debug = true
 sgx.edmm_enable = {{ 'true' if env.get('EDMM', '0') == '1' else 'false' }}
-sgx.remote_attestation = "{{ ra_type }}"
-sgx.ra_client_spid = "12345678901234567890123456789012"
-sgx.ra_client_linkable = false
+sys.enable_sigterm_injection = true
+sgx.max_threads = 8
 
-#sgx.allowed_file = [
-#  "file:controller"
-#]
 
 sgx.trusted_files = [
   "file:{{ gramine.libos }}",
-  "file:{{ arch_libdir }}/",
-  "file:{{ install_dir }}/controller",
   "file:{{ gramine.runtimedir() }}/",
+
+  "file:{{ entrypoint }}",
+  "file:{{ install_dir }}/controller",
+
+  "file:{{ arch_libdir }}/",
   "file:{{ install_dir }}/lib/"
 ]

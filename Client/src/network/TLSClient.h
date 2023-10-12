@@ -44,8 +44,6 @@ private:
 	bool loadCertificate();
 
 	bool verifyCertificate();
-	static int my_verify_measurements(const char* mrenclave, const char* mrsigner, const char* isv_prod_id, const char* isv_svn);
-	static int my_verify_callback(void* data, mbedtls_x509_crt* crt, int depth, uint32_t* flags);
 
 private:
 	mbedtls_net_context m_server;
@@ -55,7 +53,6 @@ private:
     mbedtls_ssl_config m_conf;
     mbedtls_x509_crt m_cacert;
     mbedtls_timing_delay_context m_timer;
-
 
 };
 

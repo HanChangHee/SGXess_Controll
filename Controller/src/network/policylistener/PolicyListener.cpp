@@ -19,7 +19,7 @@ bool PolicyListener::init() {
 
 void *PolicyListener::run(void *argv) {
 	if ( NULL == argv ) {
-		return -1;
+		return 0;
 	}
 
 	PolicyListener listener;
@@ -53,7 +53,6 @@ bool PolicyListener::runListener(PolicyManager *manager) {
 		// todo: send response to policy deployer
 
 		m_server.resetClient();
-		printf("received message from client: %s\n", policy.c_str());
 
 		manager->insertPolicy(policy);
 	}

@@ -10,8 +10,8 @@
 #include "mbedtls/ctr_drbg.h"
 #include "mbedtls/timing.h"
 
-#define SRV_CRT_PATH "ssl/server.crt"
-#define SRV_KEY_PATH "ssl/server.key"
+#define CA_CRT_PATH "ssl/ca.crt"
+#define CA_KEY_PATH "ssl/ca.key"
 
 class TLSServer {
 public:
@@ -20,7 +20,7 @@ public:
 
 	void terminate();
 
-	bool setListener(std::string port, bool bRATLS = false);
+	bool setListener(std::string port);
 
 	bool acceptClient();
 
@@ -29,6 +29,12 @@ public:
 	bool recvMsg(std::string &msg);
 
 	bool sendMsg(std::string &msg);
+
+	static bool recvMsg(std::string &msg, mbedtls_ssl_context ssl);
+
+	static bool sendMsg(std::string &msg, mbedtls_ssl_context ssl);
+
+	mbedtls_ssl_context getSSL();
 
 private:
 	void init();
@@ -40,10 +46,9 @@ private:
 	bool setSSLConfig();
 
 private:
-	bool m_RATLS;
-
 	mbedtls_net_context m_server;
 	mbedtls_net_context m_client;
+	mbedtls_ssl_cookie_ctx m_cookie_ctx;
 	mbedtls_entropy_context m_entropy;
 	mbedtls_ctr_drbg_context m_ctr_drbg;
 	mbedtls_ssl_context m_ssl;

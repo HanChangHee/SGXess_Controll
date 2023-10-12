@@ -1,9 +1,3 @@
-/*
- * Listener.cpp
- *
- *  Created on: 2023. 4. 10.
- *      Author: chhan
- */
 #include <dlfcn.h>
 #include <errno.h>
 #include <stdio.h>
@@ -411,4 +405,3 @@ bool Attestator::getClientMsg(std::string &msg) {
 
     return true;
 }
-

@@ -84,16 +84,14 @@ bool TLSClient::connect(std::string IP, std::string port) {
 
 		if (ret != 0) {
 			printf(" failed\n  ! mbedtls_ssl_handshake returned -0x%x\n\n", (unsigned int) -ret);
-			fflush(stdout);
 			break;
 		}
 
 		printf(" ok\n");
 
 		// verify certificate
-
 		if ( false == verifyCertificate() ) {
-			//ret = 1;
+			ret = 1;
 			break;
 		}
 	} while (false);
@@ -176,11 +174,7 @@ bool TLSClient::verifyCertificate() {
 	 * handshake would not succeed if the peer's cert is bad.  Even if we used
 	 * MBEDTLS_SSL_VERIFY_OPTIONAL, we would bail out here if ret != 0 */
 	if ((flags = mbedtls_ssl_get_verify_result(&m_ssl)) != 0) {
-		char vrfy_buf[512];
 		printf(" failed\n");
-       mbedtls_x509_crt_verify_info(vrfy_buf, sizeof(vrfy_buf), "  ! ", flags);
-       printf("%s\n", vrfy_buf);
-
 		return false;
 	}
 
@@ -225,15 +219,9 @@ bool TLSClient::setSSLConfig(std::string &IP) {
 	 * Production code should set a proper ca chain and use REQUIRED. */
 	mbedtls_ssl_conf_authmode(&m_conf, MBEDTLS_SSL_VERIFY_OPTIONAL);
 	mbedtls_ssl_conf_ca_chain(&m_conf, &m_cacert, NULL);
-	printf(" ok\n");
-
-    /* use RA-TLS verification callback; this will overwrite CA chain set up above */
-    mbedtls_printf("  . Installing RA-TLS callback ...");
-    //mbedtls_ssl_conf_verify(&m_conf, &my_verify_callback, &my_verify_callback_results);
-    mbedtls_printf(" ok\n");
-
 	mbedtls_ssl_conf_rng(&m_conf, mbedtls_ctr_drbg_random, &m_ctr_drbg);
 	//mbedtls_ssl_conf_dbg(&m_conf, my_debug, stdout);
+	mbedtls_ssl_conf_read_timeout(&m_conf, READ_TIMEOUT_MS);
 
 	if ((ret = mbedtls_ssl_setup(&m_ssl, &m_conf)) != 0) {
 		printf(" failed\n  ! mbedtls_ssl_setup returned %d\n\n", ret);
@@ -246,7 +234,10 @@ bool TLSClient::setSSLConfig(std::string &IP) {
 	}
 
 	mbedtls_ssl_set_bio(&m_ssl, &m_server, mbedtls_net_send, mbedtls_net_recv, mbedtls_net_recv_timeout);
-	//mbedtls_ssl_set_timer_cb(&m_ssl, &m_timer, mbedtls_timing_set_delay, mbedtls_timing_get_delay);
+	mbedtls_ssl_set_timer_cb(&m_ssl, &m_timer, mbedtls_timing_set_delay, mbedtls_timing_get_delay);
+
+	printf(" ok\n");
 
 	return true;
 }
+

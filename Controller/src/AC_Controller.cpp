@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
 	PolicyManager manager;
 
 	// run policy listener
-	Thread::runThread(PolicyListener::run, &manager);
+	//Thread::runThread(PolicyListener::run, &manager);
 
 	// run request listener
 	Thread::runThread(RequestListener::run, &manager);

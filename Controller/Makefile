@@ -12,8 +12,7 @@ ifeq ($(SGX),1)
         all: controller.manifest.sgx controller.sig
 endif
 
-THIS_DIR := $(shell pwd)
-INSTALL_DIR ?= $(THIS_DIR)
+INSTALL_DIR := $(shell pwd)
 ARCH_LIBDIR := /lib/$(shell $(CC) -dumpmachine)
 
 SRCEXT := cpp
@@ -71,18 +70,18 @@ ssl/server.crt: ssl/ca_config.conf
 	openssl x509 -req -days 360 -in ssl/server.csr -CA ssl/ca.crt -CAkey ssl/ca.key -CAcreateserial -out ssl/server.crt
 
 ############ SET GRAMINE CONFIGURATION #############
-RA_TYPE ?= epid
+RA_TYPE ?= dcap
 ISVPRODID ?= 0
 
 controller.manifest: controller.manifest.template
 	gramine-manifest \
+		-Dentrypoint=$$(command -v gramine-ratls) \
 		-Dlog_level=$(GRAMINE_LOG_LEVEL) \
 		-Darch_libdir=$(ARCH_LIBDIR) \
 		-Dra_type=$(RA_TYPE) \
 		-Disvprodid=$(ISVPRODID) \
 		-Dinstall_dir=$(INSTALL_DIR) \
-		-Dthis_dir=$(THIS_DIR) \
-		$< $@
+		$< > $@
 
 controller.sig controller.manifest.sgx: sgx_sign
         @:

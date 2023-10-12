@@ -8,26 +8,17 @@
 #ifndef LISTENER_H_
 #define LISTENER_H_
 
-#include <string>
-#include "Attestator.h"
-
 class Listener {
 public:
 	Listener();
 	virtual ~Listener();
 
 	bool init(unsigned short port);
-	int getClientMsgRATLS(std::string &msg);
 	int getClientConn();
-	void deleteConn();
 	void deleteClientConn(int clientSock);
-private:
-	bool listenTCP(unsigned short port);
-	bool listenRATLS(unsigned short port);
 
-private:
+public:
 	int m_sock;
-	Attestator m_attestator;
 };
 
 #endif /* LISTENER_H_ */

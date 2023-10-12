@@ -18,12 +18,12 @@ RequestListener::~RequestListener() {
 }
 
 bool RequestListener::init() {
-	return m_server.setListener("30011");
+	return m_server.setListener("30011", true);
 }
 
 void *RequestListener::run(void *argv) {
 	if ( NULL == argv ) {
-		return -1;
+		return 0;
 	}
 
 	RequestListener listener;
