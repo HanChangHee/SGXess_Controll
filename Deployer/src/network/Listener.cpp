@@ -37,6 +37,7 @@ bool Listener::init(unsigned short port) {
 	server_addr.sin_addr.s_addr = INADDR_ANY;
 	server_addr.sin_port = ::htons(port);
 
+
 	ret = bind(m_sock, (struct sockaddr *)&server_addr, sizeof(server_addr));
 	if ( 0 > ret ) {
 		return false;

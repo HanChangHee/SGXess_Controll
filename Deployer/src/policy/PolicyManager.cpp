@@ -43,7 +43,7 @@ void PolicyManager::managePolicy() {
 			continue;
 		}
 
-		Policy parsedPolicy(policy);
+		// Policy parsedPolicy(policy);
 
 		// todo: analysis policy deploy target
 		// todo: deploy policy string

@@ -103,7 +103,7 @@ bool TLSServer::recvMsg(std::string &msg) {
 		switch (ret) {
 		case MBEDTLS_ERR_SSL_TIMEOUT:
 			mbedtls_printf(" timeout\n\n");
-			return false;
+			return true;
 			break;
 
 		case MBEDTLS_ERR_SSL_PEER_CLOSE_NOTIFY:
@@ -124,10 +124,10 @@ bool TLSServer::recvMsg(std::string &msg) {
 	return true;
 }
 
-bool TLSServer::sendMsg(std::string &msg) {
+bool TLSServer::sendMsg(std::string msg) {
 	int ret = 0;
 
-	mbedtls_printf("  > Write to server:");
+	//mbedtls_printf("  > Write to server:");
 	fflush(stdout);
 
 	do {
@@ -219,10 +219,10 @@ bool TLSServer::setListener(std::string port, bool bRATLS) {
 bool TLSServer::setSSLConfig() {
 	int ret = 0;
 
-	mbedtls_printf("  . Setting up the DTLS data...");
+	mbedtls_printf("  . Setting up the TLS data...");
 	fflush(stdout);
 
-	if ((ret = mbedtls_ssl_config_defaults(&m_conf, MBEDTLS_SSL_IS_SERVER, MBEDTLS_SSL_TRANSPORT_DATAGRAM, MBEDTLS_SSL_PRESET_DEFAULT)) != 0) {
+	if ((ret = mbedtls_ssl_config_defaults(&m_conf, MBEDTLS_SSL_IS_SERVER, MBEDTLS_SSL_TRANSPORT_STREAM, MBEDTLS_SSL_PRESET_DEFAULT)) != 0) {
 		mbedtls_printf(" failed\n  ! mbedtls_ssl_config_defaults returned %d\n\n", ret);
 		return false;
 	}
@@ -257,7 +257,7 @@ bool TLSServer::loadCertificate() {
 	mbedtls_printf("  . Loading the CA root certificate ...");
 	fflush(stdout);
 
-	ret = mbedtls_x509_crt_parse_file(&m_srvcert, "/tmp/crt.pem");
+	ret = mbedtls_x509_crt_parse_file(&m_srvcert, SRV_CRT_PATH);
 
 	if (ret < 0) {
 		mbedtls_printf(" failed\n  !  mbedtls_x509_crt_parse returned -0x%x\n\n", (unsigned int) -ret);
@@ -265,11 +265,11 @@ bool TLSServer::loadCertificate() {
 		return false;
 	}
 	else {
-		mbedtls_printf(" successs to get crt.pem\n");
+		mbedtls_printf(" successs to get %sn", SRV_CRT_PATH);
 		fflush(stdout);
 	}
 
-	ret = mbedtls_pk_parse_keyfile(&m_pkey, "/tmp/key.pem", NULL, mbedtls_ctr_drbg_random, &m_ctr_drbg);
+	ret = mbedtls_pk_parse_keyfile(&m_pkey, SRV_KEY_PATH, NULL, mbedtls_ctr_drbg_random, &m_ctr_drbg);
 
     if (ret != 0) {
         mbedtls_printf(" failed\n  !  mbedtls_pk_parse_key returned %d\n\n", ret);
@@ -277,7 +277,7 @@ bool TLSServer::loadCertificate() {
         return false;
     }
     else {
-    	mbedtls_printf(" successs to get key.pem\n");
+    	mbedtls_printf(" successs to get %s\n", SRV_KEY_PATH);
     	fflush(stdout);
     }
 

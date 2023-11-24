@@ -30,11 +30,11 @@ public:
 
 private:
 	// update policy list with inserted policy data
-	void updatePolicy(Policy &policy);
+	void updatePolicy(std::string policy);
 	void popPolicy(std::string &policy);
 
 private:
-	std::map<std::string, Policy> mapPolicy;
+	std::map<std::string, bool> mapPolicy;
 
 	std::list<std::string> m_updateList;
 	std::mutex m_mutex;

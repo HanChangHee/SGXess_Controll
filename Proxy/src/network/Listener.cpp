@@ -6,7 +6,6 @@
  */
 #include <stdio.h>
 #include <sys/socket.h>
-#include <arpa/inet.h>
 #include <unistd.h>
 #include <netinet/in.h>
 
@@ -55,8 +54,7 @@ bool Listener::init(unsigned short port) {
 	return true;
 }
 
-int Listener::getClientConn() {
-	sockaddr_in client_addr;
+int Listener::getClientConn(sockaddr_in &client_addr) {
 	int clientAddrSize = sizeof(client_addr);
 	int clientSock = accept(m_sock, (struct sockaddr *)&client_addr, (socklen_t *)&clientAddrSize);
 

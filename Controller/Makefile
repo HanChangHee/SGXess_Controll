@@ -24,12 +24,13 @@ OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 LINK := -lpthread -lyaml-cpp -l$(URTS_LIB_NAME) -ldl -lmbedcrypto_gramine -lmbedtls_gramine -lmbedx509_gramine -lcjson
 
 LIB :=  -L/usr/local/lib \
+	-L/usr/local/lib/x86_64-linux-gnu \
 	-L$(THIS_DIR)/lib \
 	-L$(SGXSDK)/sdk_libs \
 	-L$(SGX_LIBRARY_PATH)
 	
 INC :=	-I /usr/local/include \
-	-I /usr/include/gramine \
+	-I /opt/intel/sgxsdk/include \
 	-I $(SGXSDK)/include \
 	-I $(SRCDIR)/network \
 	-I $(SRCDIR)/network/requestlistener \
@@ -38,6 +39,8 @@ INC :=	-I /usr/local/include \
 	-I $(SRCDIR)/policy \
 	-I $(SRCDIR)/utils \
 	-I $(SRCDIR)/attestation
+
+DEF := -DSGX=$(SGX)
 
 ifeq ($(DEBUG),1)
 GRAMINE_LOG_LEVEL = debug
@@ -55,7 +58,7 @@ $(TARGET): $(OBJECTS)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INC) $(LIB) -c -o $@ $< $(LINK)
+	$(CC) $(CFLAGS) $(INC) $(LIB) -c -o $@ $< $(LINK) $(DEF)
 
 clean:
 	@echo "Cleaning..."
@@ -75,7 +78,6 @@ ISVPRODID ?= 0
 
 controller.manifest: controller.manifest.template
 	gramine-manifest \
-		-Dentrypoint=$$(command -v gramine-ratls) \
 		-Dlog_level=$(GRAMINE_LOG_LEVEL) \
 		-Darch_libdir=$(ARCH_LIBDIR) \
 		-Dra_type=$(RA_TYPE) \

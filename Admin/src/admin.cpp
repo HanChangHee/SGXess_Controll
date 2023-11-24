@@ -17,11 +17,11 @@ int main() {
 	}
 	openFile.close();
 
-	printf("[Deploying Policy]\n");
-	printf("%s", policy.c_str());
-	printf("Policy Length : %d\n", policy.size());
+	//printf("[Deploying Policy]\n");
+	//printf("%s", policy.c_str());
+	printf("Policy Length : %u\n", policy.size());
 
-	PolicyDeployer::deployPolicy(policy, "192.168.0.5", 30001);
+	PolicyDeployer::deployPolicy(policy, "127.0.0.1", 30005);
 
 	return 0;
 }

@@ -45,11 +45,6 @@ bool PolicyDeployer::deployPolicy(std::string &policy, std::string IP, std::stri
 
 	client.terminate();
 
-	//m_attestator.sendMsg(policy, IP, port);
-	// todo: receive deployment result
-
-	//deployer.destroyConnection(conn);
-
 	return true;
 }
 

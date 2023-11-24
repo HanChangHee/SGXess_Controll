@@ -9,7 +9,6 @@
 #define POLICYDEPLOYER_H_
 
 #include <string>
-#include "Attestator.h"
 
 class PolicyDeployer {
 public:
@@ -23,7 +22,6 @@ private:
 	virtual ~PolicyDeployer();
 
 private:
-	Attestator m_attestator;
 };
 
 #endif /* POLICYDEPLOYER_H_ */

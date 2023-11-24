@@ -1,21 +1,20 @@
 loader.entrypoint = "file:{{ gramine.libos }}"
-loader.argv = [
-    "gramine-ratls", "/tmp/crt.pem", "/tmp/key.pem", "--", "/deployer"
-]
-libos.entrypoint = "/gramine-ratls"
+libos.entrypoint = "/deployer"
 loader.log_level = "{{ log_level }}"
+
+loader.uid = 65534
+loader.gid = 65534
 
 #loader.env.LD_LIBRARY_PATH = "/lib:{{ arch_libdir }}:{{ install_dir }}/lib"
 loader.env.LD_LIBRARY_PATH = "/lib:/lib_y:{{ arch_libdir }}"
 loader.env.PATH = "/:/bin:/usr/bin"
 
 fs.mounts = [
-  { path = "/gramine-ratls", uri = "file:{{ entrypoint }}" },
-  { path = "/usr/sbin", uri = "file:/usr/sbin" },
   { path = "/deployer", uri = "file:{{ install_dir }}/deployer" },
 
   { path = "/lib_y", uri = "file:{{ install_dir }}/lib/" },
   { path = "/lib", uri = "file:{{ gramine.runtimedir() }}" },
+
   { path = "{{ arch_libdir }}/libstdc++.so.6", uri = "file:{{ arch_libdir }}/libstdc++.so.6" },
   { path = "{{ arch_libdir }}/libstdc++.so.6.0.28", uri = "file:{{ arch_libdir }}/libstdc++.so.6.0.28" },
   { path = "{{ arch_libdir }}/libgcc_s.so.1", uri = "file:{{ arch_libdir }}/libgcc_s.so.1" },
@@ -24,22 +23,20 @@ fs.mounts = [
 ]
 
 sgx.remote_attestation = "{{ ra_type }}"
-{%- if ra_type == "epid" %}
-sgx.ra_client_spid = "09876543210987654321098765432109"
-sgx.ra_client_linkable = false
-{%- endif %}
 
 sgx.debug = true
-sgx.edmm_enable = {{ 'true' if env.get('EDMM', '0') == '1' else 'false' }}
+sgx.profile.enable = "main"
+sgx.profile.with_stack = true
+sys.enable_sigterm_injection = true
+
+sgx.enable_stats=true
 
 sgx.trusted_files = [
   "file:{{ gramine.libos }}",
   "file:{{ gramine.runtimedir() }}/",
 
-  "file:{{ entrypoint }}",
   "file:{{ arch_libdir }}/",
   "file:{{ install_dir }}/deployer",
   "file:{{ install_dir }}/lib/",
-  "file:{{ install_dir }}/src/",
   "file:ssl/ca.crt"
 ]

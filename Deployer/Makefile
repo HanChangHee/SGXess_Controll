@@ -23,7 +23,8 @@ HEADERS := $(shell find $(SRCDIR) -type f -name *.$(HEADEREXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 LINK := -lpthread -lyaml-cpp -l$(URTS_LIB_NAME) -ldl -lmbedcrypto_gramine -lmbedtls_gramine -lmbedx509_gramine -lcjson
 
-LIB :=  -L/USR/LOCAL/LIB \
+LIB :=  -L/usr/local/lib \
+	-L/usr/local/lib/x86_64-linux-gnu \
 	-L$(THIS_DIR)/lib \
 	-L$(SGXSDK)/sdk_libs \
 	-L$(SGX_LIBRARY_PATH)

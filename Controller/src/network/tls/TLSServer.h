@@ -28,7 +28,7 @@ public:
 
 	bool recvMsg(std::string &msg);
 
-	bool sendMsg(std::string &msg);
+	bool sendMsg(std::string msg);
 
 private:
 	void init();

@@ -1,3 +1,4 @@
+SGX = 0
 SGX_ARCH ?= x64
 SGXSDK := /opt/intel/sgxsdk
 

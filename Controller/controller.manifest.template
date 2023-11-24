@@ -1,8 +1,5 @@
 loader.entrypoint = "file:{{ gramine.libos }}"
-loader.argv = [
-    "gramine-ratls", "/tmp/crt.pem", "/tmp/key.pem", "--", "/controller"
-]
-libos.entrypoint = "/gramine-ratls"
+libos.entrypoint = "/controller"
 loader.log_level = "{{ log_level }}"
 
 loader.uid = 65534
@@ -12,7 +9,6 @@ loader.env.LD_LIBRARY_PATH = "/lib:/lib_y:{{ arch_libdir }}"
 loader.env.PATH = "/:/bin:/usr/bin:/usr/sbin"
 
 fs.mounts = [
-  { path = "/gramine-ratls", uri = "file:{{ entrypoint }}" },
   { path = "/controller", uri = "file:{{ install_dir }}/controller" },
 
   { path = "/lib_y", uri = "file:{{ install_dir }}/lib/" },
@@ -26,23 +22,20 @@ fs.mounts = [
 ]
 
 sgx.remote_attestation = "{{ ra_type }}"
-{%- if ra_type == "epid" %}
-sgx.ra_client_spid = "12345678901234567890123456789012"
-sgx.ra_client_linkable = false
-{%- endif %}
-
 
 sgx.debug = true
-sgx.edmm_enable = {{ 'true' if env.get('EDMM', '0') == '1' else 'false' }}
+sgx.profile.enable = "main"
+sgx.profile.with_stack = true
 sys.enable_sigterm_injection = true
-sgx.max_threads = 8
 
+sgx.max_threads = 8
+sgx.enable_stats = true
+sgx.enclave_size = "1G"
 
 sgx.trusted_files = [
   "file:{{ gramine.libos }}",
   "file:{{ gramine.runtimedir() }}/",
 
-  "file:{{ entrypoint }}",
   "file:{{ install_dir }}/controller",
 
   "file:{{ arch_libdir }}/",

@@ -8,13 +8,15 @@
 #ifndef LISTENER_H_
 #define LISTENER_H_
 
+#include <arpa/inet.h>
+
 class Listener {
 public:
 	Listener();
 	virtual ~Listener();
 
 	bool init(unsigned short port);
-	int getClientConn();
+	int getClientConn(sockaddr_in &client_addr);
 	void deleteClientConn(int clientSock);
 
 public:

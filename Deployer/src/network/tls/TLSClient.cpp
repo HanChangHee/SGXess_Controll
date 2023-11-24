@@ -57,11 +57,11 @@ bool TLSClient::connect(std::string IP, std::string port) {
 		}
 
 		// connect
-		printf("  . Connecting to udp/%s/%s...", IP.c_str(), port.c_str());
+		printf("  . Connecting to tcp/%s/%s...", IP.c_str(), port.c_str());
 		fflush(stdout);
 
 		if (0 != (ret = mbedtls_net_connect(&m_server, IP.c_str(),
-						port.c_str(), MBEDTLS_NET_PROTO_UDP))) {
+						port.c_str(), MBEDTLS_NET_PROTO_TCP))) {
 			printf(" failed\n  ! mbedtls_net_connect returned %d\n\n", ret);
 			break;
 		}
@@ -214,7 +214,7 @@ bool TLSClient::setSSLConfig(std::string &IP) {
 	printf("  . Setting up the DTLS structure...");
 	fflush(stdout);
 
-	if ((ret = mbedtls_ssl_config_defaults(&m_conf, 	MBEDTLS_SSL_IS_CLIENT, MBEDTLS_SSL_TRANSPORT_DATAGRAM,
+	if ((ret = mbedtls_ssl_config_defaults(&m_conf, 	MBEDTLS_SSL_IS_CLIENT, MBEDTLS_SSL_TRANSPORT_STREAM,
 			MBEDTLS_SSL_PRESET_DEFAULT)) != 0) {
 		printf(" failed\n  ! mbedtls_ssl_config_defaults returned %d\n\n", ret);
 		return false;

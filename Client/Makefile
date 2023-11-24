@@ -11,7 +11,7 @@ HEADEREXT := h
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 HEADERS := $(shell find $(SRCDIR) -type f -name *.$(HEADEREXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
-LINK := -lpthread -ldl -lmbedcrypto_gramine -lmbedtls_gramine -lmbedx509_gramine
+LINK := -L /usr/local/lib/x86_64-linux-gnu -lpthread -ldl -lmbedcrypto_gramine -lmbedtls_gramine -lmbedx509_gramine
 
 INC := -I /usr/local/include \
        -I /usr/include/gramine \

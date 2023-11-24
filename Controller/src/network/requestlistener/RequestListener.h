@@ -12,6 +12,8 @@
 #ifndef ACLISTENER_H_
 #define ACLISTENER_H_
 
+#include <time.h>
+
 //#include "Listener.h"
 #include "TLSServer.h"
 
@@ -29,6 +31,8 @@ private:
 
 private:
 	TLSServer m_server;
+	clock_t m_start;
+
 };
 
 #endif /* ACLISTENER_H_ */

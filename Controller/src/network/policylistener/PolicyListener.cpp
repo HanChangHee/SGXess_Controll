@@ -13,8 +13,21 @@ PolicyListener::~PolicyListener() {
 }
 
 bool PolicyListener::init() {
-	//return m_listener.init(30010);
-	return m_server.setListener("30010");
+	bool ret = true;
+	clock_t cstart = clock();
+	double start = (double) cstart;
+
+	if ( 1 == SGX ) {
+		ret =  m_server.setListener("30010", true);
+	}
+	else {
+		ret =  m_server.setListener("30010", false);
+	}
+
+	clock_t end = clock();
+	printf("time to run policy listener: %f sec \n", (double)((double)end - start) / CLOCKS_PER_SEC);
+
+	return ret;
 }
 
 void *PolicyListener::run(void *argv) {

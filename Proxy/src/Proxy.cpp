@@ -1,13 +1,18 @@
 #include <stdio.h>
 #include <string>
 
-#include "Listener.h"
-#include "SocketUtil.h"
-
-#include "TLSClient.h"
-#include "validator/Validator.h"
+#include "Thread.h"
+#include "ProxyListener.h"
+#include "ProxyManager.h"
 
 int main() {
+	// Listener thread 실행
+	ProxyManager manager;
+	Thread::runThread(ProxyListener::run, &manager);
+
+	manager.manageClient();
+
+	/*
 	Listener server;
 	if ( false == server.init(30020) ) {
 		printf("Failed to init server\n");
@@ -23,11 +28,6 @@ int main() {
 			printf("[Recv msg]\n%s", msg.c_str());
 			server.deleteClientConn(client);
 
-			TLSClient tlsclient;
-			if ( false == tlsclient.connect("192.168.0.3", "30011") ) {
-				tlsclient.terminate();
-				continue;
-			}
 
 			tlsclient.sendMsg(msg);
 			tlsclient.terminate();
@@ -37,7 +37,7 @@ int main() {
 		}
 	}
 
-	/*
+
 	TLSServer server;
 
 	server.setListener("30020");
